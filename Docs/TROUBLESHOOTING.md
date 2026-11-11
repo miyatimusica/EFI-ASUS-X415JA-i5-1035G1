@@ -69,6 +69,17 @@ system_profiler SPUSBDataType | grep -A6 -i bluetooth
 log show --predicate 'process == "bluetoothd"' --last 5m
 ```
 
+Check you are running the patched binary, not a stock 2.3.1 build:
+
+```bash
+shasum -a 256 EFI/OC/Kexts/AirportRTW.kext/Contents/MacOS/AirportRTW
+# 1bda8904f1a99fc4188060263749fdcf75825f054def8f169368977d8df89c2a
+xxd -s 0x1898E0 -l 1 EFI/OC/Kexts/AirportRTW.kext/Contents/MacOS/AirportRTW
+# 0001898e0: c3
+```
+
+AirDrop needs `awdl0` and does not work yet; that is unrelated to this patch.
+
 ### No audio
 
 ```bash

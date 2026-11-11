@@ -273,14 +273,29 @@ The RTL8821CE is a combo chip: WiFi over PCIe, Bluetooth over USB (reported as
 driver has to arbitrate between them. Upstream 2.3.1 ships that coexistence logic but
 only arms it for one specific PCI ID.
 
-**The `AirportRTW.kext` in this repo is not the stock binary.** It was patched locally to
-enable coexistence for this machine's ID (`10ec:c821`). With that patch, WiFi and
-Bluetooth work together at close to full capability: pairing, audio, file transfer and
-input devices all behave. **AirDrop is the one thing still missing.**
+**The `AirportRTW.kext` in this repo is not the stock binary.** Coexistence for this
+machine's ID (`10ec:c821`) is enabled by a **single byte** in the Mach-O:
 
-If you replace the kext with a stock 2.3.1 build, coexistence is no longer enabled for
-this ID and WiFi and Bluetooth go back to competing for the antenna. Keep this binary or
-reapply the patch. The change is not upstreamed, so there is no release to link to.
+| | |
+|---|---|
+| Offset | `0x1898E0` in `Contents/MacOS/AirportRTW` |
+| Change | `48` → `C3` — the gate function returns immediately |
+| SHA-256 | `1bda8904…f89c2a` (full hash below) |
+
+With it, WiFi and Bluetooth work together at close to full capability: pairing, audio,
+file transfer and input devices all behave. **AirDrop is the one thing still missing.**
+
+The patch lives in the binary, not in the fork's source, and is tied to version 2.3.1.
+A kext rebuilt from source, or a newer upstream release, does not carry it — find the same
+function by symbol (the offset moves when you recompile) and reapply it, or port it into
+the source. The change is not upstreamed, so there is no release to link to.
+
+```bash
+shasum -a 256 EFI/OC/Kexts/AirportRTW.kext/Contents/MacOS/AirportRTW
+# 1bda8904f1a99fc4188060263749fdcf75825f054def8f169368977d8df89c2a
+xxd -s 0x1898E0 -l 1 EFI/OC/Kexts/AirportRTW.kext/Contents/MacOS/AirportRTW
+# 0001898e0: c3
+```
 
 Check both sides are up:
 
@@ -288,6 +303,14 @@ Check both sides are up:
 system_profiler SPBluetoothDataType | head -20
 system_profiler SPUSBDataType | grep -A6 -i "bluetooth"
 ```
+
+#### AirDrop / AWDL
+
+AirDrop needs an `awdl0` interface, and this driver does not create one. Adding it is
+separate work in progress: a fork is porting the AWDL interface to macOS 15 (ABI measured,
+radio and peer methods still missing, not installed on this machine). It will get its own
+repo — this one does not ship it, and nothing here depends on it.
+
 
 macOS labels any non-Apple radio as `THIRD_PARTY_DONGLE`; on this machine that is the
 **onboard** module, not a USB dongle.

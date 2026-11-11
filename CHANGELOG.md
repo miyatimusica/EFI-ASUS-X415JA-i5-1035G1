@@ -87,8 +87,16 @@ ports, NVMe, webcam.
 
 `AirportRTW.kext` is not the stock 2.3.1 binary. Upstream enables WiFi/Bluetooth
 coexistence for a single PCI ID; this build extends it to the RTL8821CE in this machine
-(`10ec:c821`), which is what makes WiFi and Bluetooth usable at the same time. The change
-is local and not upstreamed — replacing the kext with an official build loses it.
+(`10ec:c821`), which is what makes WiFi and Bluetooth usable at the same time.
+
+- One byte in `Contents/MacOS/AirportRTW`: `0x1898E0`, `48` → `C3`
+- SHA-256 of the patched binary:
+  `1bda8904f1a99fc4188060263749fdcf75825f054def8f169368977d8df89c2a`
+- The patch is in the binary, not in the fork source, and is tied to 2.3.1. A rebuild or
+  an upstream update loses it; reapply it by symbol.
+
+AirDrop is still missing because it needs `awdl0`. An AWDL port for macOS 15 is in
+progress in a separate fork and will get its own repo; it is not part of this EFI.
 
 ### Removed in this cleanup
 

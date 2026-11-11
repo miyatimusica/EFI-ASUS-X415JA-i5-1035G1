@@ -96,9 +96,10 @@ The same combo chip provides Bluetooth over USB, enumerated as `13d3:3529` (Azur
 module, Realtek silicon). It runs with `BlueToolFixup` and `RealtekBluetoothFirmware`.
 
 The bundled `AirportRTW.kext` is **patched locally**: upstream 2.3.1 arms WiFi/BT
-coexistence for one specific PCI ID only, and this binary extends it to `10ec:c821`. Both
-radios then work together — pairing, audio, file transfer and input devices. **AirDrop is
-still not working.**
+coexistence for one specific PCI ID only, and this binary extends it to `10ec:c821` with a
+one-byte change at `0x1898E0` (`48` → `C3`). Both radios then work together — pairing,
+audio, file transfer and input devices. **AirDrop is still not working**: it needs an
+`awdl0` interface, which is a separate port in progress, not part of this EFI.
 
 ## USB
 

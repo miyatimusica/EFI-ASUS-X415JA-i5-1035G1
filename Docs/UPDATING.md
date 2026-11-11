@@ -53,8 +53,9 @@ Notes:
 - `AirportRTW` is self-contained: one kext, RTW88 and RTW89 backends chosen by PCI ID.
   It does not use `IOSkywalkFamily` or `IO80211FamilyLegacy`; leave those disabled.
 - The bundled `AirportRTW.kext` is **patched locally** to enable WiFi/Bluetooth
-  coexistence for `10ec:c821`. A stock upstream build does not have that, so do not
-  replace it blindly when updating — reapply the patch first.
+  coexistence for `10ec:c821`: one byte at `0x1898E0`, `48` → `C3`. A stock upstream
+  build does not have that, so do not replace it blindly — reapply the patch first. It is
+  tied to 2.3.1 and the offset moves if you recompile, so locate the function by symbol.
 - `CPUFriendDataProvider` is generated for a specific CPU and SMBIOS. Do not replace it
   with someone else's file.
 - `USBMap.kext` is hardware-specific. Updating it means remapping your ports.
