@@ -55,6 +55,7 @@ or only under specific conditions · ❌ not supported
 | 💻 Internal display + brightness | ✅ | `SSDT-PNLF`, brightness keys |
 | 🖥️ HDMI video | ⏳ | Verified at 1360×768 — the only mode tested so far. Higher resolutions are still pending testing, not confirmed broken |
 | 🔊 HDMI audio | ❌ | Not solved by the HDMIB module yet |
+| 🔔 Boot chime | ✅ | `AudioDxe.efi` + `UEFI → Audio`; keeps the volume set in the previous session |
 | 🎧 Speakers, 3.5 mm jack, mic | ✅ | `AppleALC`, `layout-id 66`, `alcverbs=1`; jack output confirmed |
 | 📶 WiFi | ✅ | `AirportRTW` 2.3.1 (souissiak1-maker fork), RTL8821CE |
 | 🔵 Bluetooth | ✅ | Onboard Realtek combo (`13d3:3529`), WiFi/BT coexistence enabled by a local `AirportRTW` patch. AirDrop still not working |
@@ -141,12 +142,13 @@ EFI/
     ├── config.plist
     ├── ACPI/       11 SSDTs (PNLF, RHUB, USBX, SRAM, TERM, DMAC,
     │               ALS0, SBUS-MCHC, HPET, SPI5, MaLd0n.aml)
-    ├── Drivers/    OpenRuntime, OpenCanopy, HfsPlus, ResetNvramEntry
+    ├── Drivers/    OpenRuntime, OpenCanopy, HfsPlus, AudioDxe,
+    │               ResetNvramEntry
     ├── Kexts/      25 kexts
-    └── Resources/  OpenCanopy theme assets
+    └── Resources/  OpenCanopy theme assets + chime audio
 ```
 
-264 files, ~36 MB.
+266 files, ~37 MB.
 
 ---
 

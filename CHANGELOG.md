@@ -22,7 +22,8 @@ running macOS Sequoia 15.8.3.
 ### Bootloader
 
 - `OpenCore.efi` 1.0.8
-- Drivers: `OpenRuntime.efi`, `OpenCanopy.efi`, `HfsPlus.efi`, `ResetNvramEntry.efi`
+- Drivers: `OpenRuntime.efi`, `OpenCanopy.efi`, `HfsPlus.efi`, `AudioDxe.efi`,
+  `ResetNvramEntry.efi`
 - Boot picker: OpenCanopy (graphical), `PickerMode = External`
 - `SecureBootModel = Disabled`, `Vault = Optional`
 
@@ -78,8 +79,9 @@ targeted fixes for backlight, USB power, SMBus and the ambient-light stub.
 ### Verified working
 
 CPU power management, iGPU acceleration, internal display and brightness, HDMI video at
-1360×768, speakers / 3.5 mm jack / mic, WiFi, Bluetooth, Ethernet, ELAN trackpad,
-keyboard and Fn keys, battery, sleep/wake, USB ports, NVMe, webcam.
+1360×768, speakers / 3.5 mm jack / mic, boot chime with volume carried across sessions,
+WiFi, Bluetooth, Ethernet, ELAN trackpad, keyboard and Fn keys, battery, sleep/wake, USB
+ports, NVMe, webcam.
 
 ### Local modifications
 
@@ -90,7 +92,7 @@ is local and not upstreamed — replacing the kext with an official build loses 
 
 ### Removed in this cleanup
 
-Four kexts were sitting in `Kexts/` without being injected, plus one unused UEFI driver:
+Four kexts were sitting in `Kexts/` without being injected:
 
 | Removed | Why |
 |---------|-----|
@@ -98,7 +100,6 @@ Four kexts were sitting in `Kexts/` without being injected, plus one unused UEFI
 | `IO80211FamilyLegacy.kext` | Same — leftover from an earlier WiFi setup (11 MB) |
 | `VoodooI2CELAN.kext` | Not injected; the ELAN trackpad runs through `VoodooI2CHID` |
 | `SimpleHDA.kext` | Was disabled in config; audio works with `AppleALC` alone (4.3 MB) |
-| `AudioDxe.efi` + `Resources/Audio` | Boot chime is not enabled (`AudioSupport` unset) |
 
 A disabled framebuffer patch with no comment was also dropped from `Kernel → Patch`.
 The EFI went from 52 MB to 36 MB with no behavioural change.

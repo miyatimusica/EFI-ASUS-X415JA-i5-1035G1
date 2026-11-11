@@ -29,6 +29,7 @@ specific conditions · ❌ not supported
 | 🔆 Brightness control | ✅ | `SSDT-PNLF`, slider and Fn keys |
 | 🖥️ HDMI video | ⏳ | Works at 1360×768 (only mode tested); higher resolutions pending testing |
 | 🔊 HDMI audio | ❌ | Not solved by the HDMIB module yet |
+| 🔔 Boot chime | ✅ | `AudioDxe.efi`, `UEFI → Audio`, `PlayChime = Enabled` |
 | 🎧 Speakers / 3.5 mm jack | ✅ | `AppleALC`, `layout-id 66`; jack output confirmed |
 | 🎙️ Internal mic | ✅ | |
 | 📶 WiFi | ✅ | `AirportRTW` 2.3.1 (souissiak1-maker fork), RTL8821CE |
