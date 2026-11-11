@@ -225,7 +225,7 @@ Where the current build stands, stated plainly:
 
 The fork, its build script, the offset tables and the setup/verify tools live in a
 separate repository:
-**[WhateverGreen-HDMIB →](https://github.com/miyatimusica/Wharevergreen-Icelake-mod)**.
+**[WhateverGreen-HDMIB →](https://github.com/miyatimusica/WhateverGreen-IceLake-HDMIB)**.
 The module and WhateverGreen are both BSD-3-Clause, so the combined binary keeps those
 terms.
 
