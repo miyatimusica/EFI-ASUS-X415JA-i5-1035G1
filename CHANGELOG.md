@@ -55,7 +55,7 @@ targeted fixes for backlight, USB power, SMBus and the ambient-light stub.
 | NVMeFix | 1.1.4 | NVMe power management |
 | RestrictEvents | 1.1.7 | Telemetry / CPU-name patches |
 | AMFIPass | 1.4.1 | AMFI bypass |
-| AirportRTW | 2.3.1 | RTL8821CE WiFi (souissiak1-maker fork, GPL-2.0) |
+| AirportRTW | 2.3.1 | RTL8821CE WiFi + Bluetooth coexistence (souissiak1-maker fork, GPL-2.0, **locally patched** — see below) |
 | IOSkywalkFamily | 1.0 | Present in `Kexts/`, **not injected** — leftover |
 | IO80211FamilyLegacy | 12.0 | Present in `Kexts/`, **not injected** — leftover |
 | BlueToolFixup | 2.7.2 | Bluetooth fixes |
@@ -83,14 +83,22 @@ targeted fixes for backlight, USB power, SMBus and the ambient-light stub.
 ### Verified working
 
 CPU power management, iGPU acceleration, internal display and brightness, HDMI video at
-1360×768, speakers / 3.5 mm jack / mic, WiFi, Ethernet, ELAN trackpad, keyboard and Fn
-keys, battery, sleep/wake, USB ports, NVMe, webcam.
+1360×768, speakers / 3.5 mm jack / mic, WiFi, Bluetooth, Ethernet, ELAN trackpad,
+keyboard and Fn keys, battery, sleep/wake, USB ports, NVMe, webcam.
+
+### Local modifications
+
+`AirportRTW.kext` is not the stock 2.3.1 binary. Upstream enables WiFi/Bluetooth
+coexistence for a single PCI ID; this build extends it to the RTL8821CE in this machine
+(`10ec:c821`), which is what makes WiFi and Bluetooth usable at the same time. The change
+is local and not upstreamed — replacing the kext with an official build loses it.
 
 ### Known limitations
 
 - HDMI audio: not working yet.
 - HDMI resolutions above 1360×768: pending testing, not confirmed broken.
-- Bluetooth verified only with a third-party USB dongle; onboard RTL8821CE BT untested.
+- AirDrop does not work yet; the rest of Bluetooth does (pairing, audio, file transfer,
+  input devices) alongside WiFi.
 - SD card reader: no usable driver.
 - Fingerprint reader: no driver.
 - `USBMap.kext` matches this exact port layout only.

@@ -57,7 +57,7 @@ or only under specific conditions · ❌ not supported
 | 🔊 HDMI audio | ❌ | Not solved by the HDMIB module yet |
 | 🎧 Speakers, 3.5 mm jack, mic | ✅ | `AppleALC`, `layout-id 66`, `alcverbs=1`; jack output confirmed |
 | 📶 WiFi | ✅ | `AirportRTW` 2.3.1 (souissiak1-maker fork), RTL8821CE |
-| 🔵 Bluetooth | ⚠️ | Verified with a third-party USB dongle; onboard BT untested |
+| 🔵 Bluetooth | ✅ | Onboard Realtek combo (`13d3:3529`), WiFi/BT coexistence enabled by a local `AirportRTW` patch. AirDrop still not working |
 | 🌐 Ethernet | ✅ | `RealtekRTL8111` 3.0.0 |
 | 🖱️ Trackpad (ELAN I2C) | ✅ | `VoodooI2C` 2.9.1 + `VoodooI2CELAN` |
 | ⌨️ Keyboard + Fn keys | ✅ | `VoodooPS2Controller` 2.3.8 |
@@ -264,6 +264,32 @@ system_profiler SPAirPortDataType | head -20
 ```
 
 The interface should report firmware `AirportRTW2.3.1`.
+
+### Bluetooth coexistence — local patch
+
+The RTL8821CE is a combo chip: WiFi over PCIe, Bluetooth over USB (reported as
+`13d3:3529`, AzureWave module, Realtek silicon). Both radios share one antenna, so the
+driver has to arbitrate between them. Upstream 2.3.1 ships that coexistence logic but
+only arms it for one specific PCI ID.
+
+**The `AirportRTW.kext` in this repo is not the stock binary.** It was patched locally to
+enable coexistence for this machine's ID (`10ec:c821`). With that patch, WiFi and
+Bluetooth work together at close to full capability: pairing, audio, file transfer and
+input devices all behave. **AirDrop is the one thing still missing.**
+
+If you replace the kext with a stock 2.3.1 build, coexistence is no longer enabled for
+this ID and WiFi and Bluetooth go back to competing for the antenna. Keep this binary or
+reapply the patch. The change is not upstreamed, so there is no release to link to.
+
+Check both sides are up:
+
+```bash
+system_profiler SPBluetoothDataType | head -20
+system_profiler SPUSBDataType | grep -A6 -i "bluetooth"
+```
+
+macOS labels any non-Apple radio as `THIRD_PARTY_DONGLE`; on this machine that is the
+**onboard** module, not a USB dongle.
 
 ---
 

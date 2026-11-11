@@ -32,7 +32,7 @@ specific conditions · ❌ not supported
 | 🎧 Speakers / 3.5 mm jack | ✅ | `AppleALC`, `layout-id 66`; jack output confirmed |
 | 🎙️ Internal mic | ✅ | |
 | 📶 WiFi | ✅ | `AirportRTW` 2.3.1 (souissiak1-maker fork), RTL8821CE |
-| 🔵 Bluetooth | ⚠️ | Verified with a third-party USB dongle; onboard BT untested |
+| 🔵 Bluetooth | ✅ | Onboard Realtek combo (`13d3:3529`), needs the patched `AirportRTW` for coexistence with WiFi. AirDrop still not working |
 | 🌐 Ethernet | ✅ | `RealtekRTL8111` 3.0.0 |
 | 🖱️ Trackpad | ✅ | ELAN I2C, `VoodooI2C` 2.9.1 + `VoodooI2CELAN` |
 | ⌨️ Keyboard | ✅ | `VoodooPS2Controller` 2.3.8 |
@@ -88,6 +88,16 @@ Load order is `Lilu → AMFIPass → AirportRTW`, with `SecureBootModel = Disabl
 **not** injected — this driver does not need them.
 
 Reported firmware string on the reference machine: `AirportRTW2.3.1`.
+
+## Bluetooth
+
+The same combo chip provides Bluetooth over USB, enumerated as `13d3:3529` (AzureWave
+module, Realtek silicon). It runs with `BlueToolFixup` and `RealtekBluetoothFirmware`.
+
+The bundled `AirportRTW.kext` is **patched locally**: upstream 2.3.1 arms WiFi/BT
+coexistence for one specific PCI ID only, and this binary extends it to `10ec:c821`. Both
+radios then work together — pairing, audio, file transfer and input devices. **AirDrop is
+still not working.**
 
 ## USB
 

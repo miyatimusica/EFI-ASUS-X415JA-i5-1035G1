@@ -54,13 +54,18 @@ runs its experimental native frontend; see
 
 ### No Bluetooth
 
-On the reference machine Bluetooth runs through a third-party USB dongle
-(`Chipset: THIRD_PARTY_DONGLE`), with `BlueToolFixup` and `RealtekBluetoothFirmware`
-loaded. If you rely on the onboard Realtek radio, expect it to need additional work —
-this EFI was not verified with it.
+Bluetooth runs on the onboard Realtek combo (`13d3:3529`) with `BlueToolFixup` and
+`RealtekBluetoothFirmware` loaded. macOS reports the chipset as `THIRD_PARTY_DONGLE`
+because it is not an Apple radio — that label does not mean a USB dongle is plugged in.
+
+The radio also needs the **patched** `AirportRTW.kext` from this repo: upstream 2.3.1
+only enables WiFi/BT coexistence for one specific PCI ID, and the binary here extends that
+to `10ec:c821`. With a stock build, expect the two radios to interfere. AirDrop is still
+not working; pairing, audio, file transfer and input devices are.
 
 ```bash
 system_profiler SPBluetoothDataType
+system_profiler SPUSBDataType | grep -A6 -i bluetooth
 log show --predicate 'process == "bluetoothd"' --last 5m
 ```
 
