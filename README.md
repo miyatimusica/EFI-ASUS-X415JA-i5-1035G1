@@ -253,10 +253,6 @@ native Wi-Fi frontend — which is the path this machine runs on Sequoia 15.8.3.
    `WhateverGreen-HDMIB` between Lilu and AMFIPass, which is harmless.
 3. `Misc → Security → SecureBootModel = Disabled` (already set here).
 
-`IOSkywalkFamily.kext` and `IO80211FamilyLegacy.kext` are **not** part of this driver and
-are **not injected** by this `config.plist`. They remain in `Kexts/` only as leftovers
-from an earlier setup; do not enable them.
-
 Check the driver is attached:
 
 ```bash

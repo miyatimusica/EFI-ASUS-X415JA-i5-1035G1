@@ -98,20 +98,6 @@ coexistence for a single PCI ID; this build extends it to the RTL8821CE in this 
 AirDrop is still missing because it needs `awdl0`. An AWDL port for macOS 15 is in
 progress in a separate fork and will get its own repo; it is not part of this EFI.
 
-### Removed in this cleanup
-
-Four kexts were sitting in `Kexts/` without being injected:
-
-| Removed | Why |
-|---------|-----|
-| `IOSkywalkFamily.kext` | Not referenced by `Kernel → Add`; `AirportRTW` does not need it |
-| `IO80211FamilyLegacy.kext` | Same — leftover from an earlier WiFi setup (11 MB) |
-| `VoodooI2CELAN.kext` | Not injected; the ELAN trackpad runs through `VoodooI2CHID` |
-| `SimpleHDA.kext` | Was disabled in config; audio works with `AppleALC` alone (4.3 MB) |
-
-A disabled framebuffer patch with no comment was also dropped from `Kernel → Patch`.
-The EFI went from 52 MB to 36 MB with no behavioural change.
-
 ### Known limitations
 
 - HDMI audio: not working yet.

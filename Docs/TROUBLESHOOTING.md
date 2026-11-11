@@ -44,8 +44,6 @@ ioreg -l | grep -i "pci10ec,c821"
 
 Only `AirportRTW` (plus `Lilu` and `AMFIPass`) is needed. Load order must be
 `Lilu → AMFIPass → AirportRTW`, and `SecureBootModel` must be `Disabled`.
-`IOSkywalkFamily` and `IO80211FamilyLegacy` are leftovers in `Kexts/` and are **not**
-injected — if you enabled them, disable them again.
 
 Expected hardware: `10ec:c821` (RTL8821CE), subsystem `1a3b:3040`. If the card is absent
 from `system_profiler`, check that WiFi is enabled in BIOS. On Sequoia 15.2+ the driver
@@ -90,8 +88,8 @@ Confirm `layout-id 66` is set on `PciRoot(0x0)/Pci(0x1F,0x3)` and `alcverbs=1` i
 `boot-args`. If the device shows up but produces no sound, try other AppleALC layouts for
 this codec (3, 11, 13, 21, 66) one at a time with a reboot between.
 
-Only `AppleALC` handles the codec here. Do not add a second HDA kext (for example
-`SimpleHDA`): two drivers on the same codec is a common cause of silence.
+Only `AppleALC` handles the codec here. Do not add a second HDA kext: two drivers on
+the same codec is a common cause of silence.
 
 ### Trackpad not working
 

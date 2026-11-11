@@ -85,8 +85,6 @@ GPL-2.0). One kext holds the RTW88 and RTW89 backends and selects one by PCI ID;
 Wi-Fi frontend.
 
 Load order is `Lilu → AMFIPass → AirportRTW`, with `SecureBootModel = Disabled`.
-`IOSkywalkFamily.kext` and `IO80211FamilyLegacy.kext` are leftovers in `Kexts/` and are
-**not** injected — this driver does not need them.
 
 Reported firmware string on the reference machine: `AirportRTW2.3.1`.
 
