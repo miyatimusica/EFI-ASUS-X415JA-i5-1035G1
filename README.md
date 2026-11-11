@@ -56,7 +56,7 @@ or only under specific conditions · ❌ not supported
 | 🖥️ HDMI video | ⏳ | Verified at 1360×768 — the only mode tested so far. Higher resolutions are still pending testing, not confirmed broken |
 | 🔊 HDMI audio | ❌ | Not solved by the HDMIB module yet |
 | 🎧 Speakers, 3.5 mm jack, mic | ✅ | `AppleALC`, `layout-id 66`, `alcverbs=1`; jack output confirmed |
-| 📶 WiFi | ✅ | `AirportRTW` 2.3.1 + `IOSkywalkFamily` |
+| 📶 WiFi | ✅ | `AirportRTW` 2.3.1 (souissiak1-maker fork), RTL8821CE |
 | 🔵 Bluetooth | ⚠️ | Verified with a third-party USB dongle; onboard BT untested |
 | 🌐 Ethernet | ✅ | `RealtekRTL8111` 3.0.0 |
 | 🖱️ Trackpad (ELAN I2C) | ✅ | `VoodooI2C` 2.9.1 + `VoodooI2CELAN` |
@@ -229,6 +229,44 @@ compiled into it, so the resulting binary is distributed under the GPL.
 
 ---
 
+## WiFi: `AirportRTW`
+
+The WiFi driver is **[AirportRTW](https://github.com/souissiak1-maker/AirportRTW)**
+(GPL-2.0), a macOS driver for Realtek RTW88 and RTW89 PCIe cards. A single kext carries
+both HALs and picks the backend by PCI ID, so the same binary covers the whole supported
+list:
+
+- **RTW88** — RTL8723DE, RTL8812AE, RTL8814AE, RTL8821AE, **RTL8821CE**, RTL8822BE,
+  RTL8822CE
+- **RTW89** — RTL8851BE, RTL8852AE, RTL8852BE, RTL8852CE, RTL8922AE
+
+This laptop has the RTL8821CE (`10ec:c821`), which is why the EFI ships
+`AirportRTW.kext` 2.3.1 (`com.senmiko.AirportRTW`). The build targets High Sierra through
+Sonoma, and on **Sequoia 15.2+ / Tahoe 26.x x86_64** it uses the project's experimental
+native Wi-Fi frontend — which is the path this machine runs on Sequoia 15.8.3.
+
+**Requirements, per the project's own instructions:**
+
+1. `AirportRTW.kext` in `EFI/OC/Kexts`.
+2. `Kernel → Add` order: **Lilu → AMFIPass → AirportRTW**. This EFI also has
+   `WhateverGreen-HDMIB` between Lilu and AMFIPass, which is harmless.
+3. `Misc → Security → SecureBootModel = Disabled` (already set here).
+
+`IOSkywalkFamily.kext` and `IO80211FamilyLegacy.kext` are **not** part of this driver and
+are **not injected** by this `config.plist`. They remain in `Kexts/` only as leftovers
+from an earlier setup; do not enable them.
+
+Check the driver is attached:
+
+```bash
+kextstat | grep -i airportrtw
+system_profiler SPAirPortDataType | head -20
+```
+
+The interface should report firmware `AirportRTW2.3.1`.
+
+---
+
 ## Post-install
 
 Copy the EFI to the internal disk, enable TRIM, tune sleep, verify hardware:
@@ -266,6 +304,11 @@ To rebuild the archive locally:
 
 MIT — see [LICENSE](LICENSE). OpenCore, Lilu, VirtualSMC, AppleALC, WhateverGreen and the
 rest belong to their respective authors; see [CHANGELOG.md](CHANGELOG.md#credits).
+
+Two bundled components carry their own licenses: `AirportRTW.kext` is **GPL-2.0**
+([souissiak1-maker/AirportRTW](https://github.com/souissiak1-maker/AirportRTW)), and the
+WhateverGreen base of `WhateverGreen-HDMIB.kext` is **GPL-2.0** as well. Redistributing
+this EFI keeps those binaries under their original terms.
 
 > This EFI is published for study and reuse. Hackintoshing violates Apple's EULA.
 > No warranty; you own the consequences of flashing your firmware and erasing your disks.

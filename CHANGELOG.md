@@ -55,9 +55,9 @@ targeted fixes for backlight, USB power, SMBus and the ambient-light stub.
 | NVMeFix | 1.1.4 | NVMe power management |
 | RestrictEvents | 1.1.7 | Telemetry / CPU-name patches |
 | AMFIPass | 1.4.1 | AMFI bypass |
-| AirportRTW | 2.3.1 | RTL8821CE WiFi |
-| IOSkywalkFamily | 1.0 | Skywalk glue |
-| IO80211FamilyLegacy | 12.0 | Legacy 802.11 stack |
+| AirportRTW | 2.3.1 | RTL8821CE WiFi (souissiak1-maker fork, GPL-2.0) |
+| IOSkywalkFamily | 1.0 | Present in `Kexts/`, **not injected** — leftover |
+| IO80211FamilyLegacy | 12.0 | Present in `Kexts/`, **not injected** — leftover |
 | BlueToolFixup | 2.7.2 | Bluetooth fixes |
 | RealtekBluetoothFirmware | 1.0.2 | Realtek BT firmware |
 | RealtekRTL8111 | 3.0.0 | Ethernet |
@@ -107,7 +107,10 @@ keys, battery, sleep/wake, USB ports, NVMe, webcam.
   troubleshooting reference
 - [VoodooI2C](https://github.com/VoodooI2C) — VoodooI2C, VoodooI2CELAN, VoodooI2CHID
 - [Acidanthera / RehabMan lineage](https://github.com/RehabMan) — VoodooPS2Controller
-- AirportRTW / IOSkywalkFamily / RealtekBluetoothFirmware authors — RTL8821CE support
+- [souissiak1-maker / AirportRTW](https://github.com/souissiak1-maker/AirportRTW)
+  (GPL-2.0) — Realtek RTW88/RTW89 driver, built on the
+  [itlwm](https://github.com/OpenIntelWireless/itlwm) architecture
+- RealtekBluetoothFirmware and BlueToolFixup authors — Bluetooth support
 - [MaLd0n](https://www.olarila.com/) — DSDT hotpatch set
 - AsusSMC authors — ASUS EC keys
 - [corpnewt](https://github.com/corpnewt) — GenSMBIOS, ProperTree, USBMap, gibMacOS

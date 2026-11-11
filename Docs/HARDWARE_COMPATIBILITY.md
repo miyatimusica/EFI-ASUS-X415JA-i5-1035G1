@@ -31,7 +31,7 @@ specific conditions · ❌ not supported
 | 🔊 HDMI audio | ❌ | Not solved by the HDMIB module yet |
 | 🎧 Speakers / 3.5 mm jack | ✅ | `AppleALC`, `layout-id 66`; jack output confirmed |
 | 🎙️ Internal mic | ✅ | |
-| 📶 WiFi | ✅ | `AirportRTW` 2.3.1 + `IOSkywalkFamily` + `IO80211FamilyLegacy` |
+| 📶 WiFi | ✅ | `AirportRTW` 2.3.1 (souissiak1-maker fork), RTL8821CE |
 | 🔵 Bluetooth | ⚠️ | Verified with a third-party USB dongle; onboard BT untested |
 | 🌐 Ethernet | ✅ | `RealtekRTL8111` 3.0.0 |
 | 🖱️ Trackpad | ✅ | ELAN I2C, `VoodooI2C` 2.9.1 + `VoodooI2CELAN` |
@@ -77,9 +77,17 @@ If audio breaks after a macOS update, try other AppleALC layouts for this codec
 
 ## WiFi
 
-Realtek RTL8821CE driven by `AirportRTW` 2.3.1, with `IOSkywalkFamily` and
-`IO80211FamilyLegacy` for the legacy 802.11 stack. Reported firmware string on the
-reference machine: `AirportRTW2.3.1`.
+Realtek RTL8821CE (`10ec:c821`) driven by `AirportRTW` 2.3.1
+([souissiak1-maker/AirportRTW](https://github.com/souissiak1-maker/AirportRTW),
+GPL-2.0). One kext holds the RTW88 and RTW89 backends and selects one by PCI ID; the
+8821CE uses the RTW88 path. On Sequoia 15.2+ it runs the project's experimental native
+Wi-Fi frontend.
+
+Load order is `Lilu → AMFIPass → AirportRTW`, with `SecureBootModel = Disabled`.
+`IOSkywalkFamily.kext` and `IO80211FamilyLegacy.kext` are leftovers in `Kexts/` and are
+**not** injected — this driver does not need them.
+
+Reported firmware string on the reference machine: `AirportRTW2.3.1`.
 
 ## USB
 

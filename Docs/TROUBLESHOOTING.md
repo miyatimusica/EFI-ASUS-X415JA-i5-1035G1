@@ -22,7 +22,7 @@ A photograph of the last lines beats guessing. Also check that the BIOS still ma
 | Panic in `AppleIntel*Graphics` | Wrong platform/device ID or DVMT too low | Restore `01005c8a` / `5c8a0000`, raise DVMT to 128M |
 | Panic in `AppleACPIPlatform` | SSDT does not match the board | Disable SSDTs one by one, starting with `MaLd0n.aml` |
 | Panic in `VoodooI2C` | Trackpad conflict | Disable `VoodooI2CELAN` and `VoodooI2CHID`, boot, re-add one at a time |
-| Panic in `AirportRTW` / `IOSkywalkFamily` | Version mismatch between the three WiFi kexts | Restore the versions from this repo together |
+| Panic in `AirportRTW` | Corrupt or mismatched kext | Re-copy `AirportRTW.kext` 2.3.1, keep `SecureBootModel = Disabled` |
 | Boots but no graphics acceleration | `WhateverGreen-HDMIB` not loading | Check `kextstat`, check the kext is enabled in `Kernel → Add` |
 
 ### Reset NVRAM
@@ -37,13 +37,20 @@ The picker includes `ResetNvramEntry.efi`. Select it once, then boot normally. T
 ### No WiFi
 
 ```bash
-kextstat | grep -iE "airportrtw|skywalk|80211"
+kextstat | grep -i airportrtw
 system_profiler SPAirPortDataType
+ioreg -l | grep -i "pci10ec,c821"
 ```
 
-All three of `AirportRTW`, `IOSkywalkFamily` and `IO80211FamilyLegacy` must be loaded, in
-that order after Lilu. If the card is missing entirely, check the WiFi device is enabled
-in BIOS. Expected hardware ID: `10ec:3040`.
+Only `AirportRTW` (plus `Lilu` and `AMFIPass`) is needed. Load order must be
+`Lilu → AMFIPass → AirportRTW`, and `SecureBootModel` must be `Disabled`.
+`IOSkywalkFamily` and `IO80211FamilyLegacy` are leftovers in `Kexts/` and are **not**
+injected — if you enabled them, disable them again.
+
+Expected hardware: `10ec:c821` (RTL8821CE), subsystem `1a3b:3040`. If the card is absent
+from `system_profiler`, check that WiFi is enabled in BIOS. On Sequoia 15.2+ the driver
+runs its experimental native frontend; see
+[souissiak1-maker/AirportRTW](https://github.com/souissiak1-maker/AirportRTW).
 
 ### No Bluetooth
 

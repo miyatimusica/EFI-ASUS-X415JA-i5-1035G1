@@ -41,7 +41,7 @@ Only update the kexts you need, one group at a time:
 | Core | Lilu, VirtualSMC (+ SMCProcessor, SMCBatteryManager, SMCLightSensor) |
 | Graphics | WhateverGreen-HDMIB |
 | Audio | AppleALC |
-| WiFi | AirportRTW, IOSkywalkFamily, IO80211FamilyLegacy |
+| WiFi | AirportRTW (single kext) |
 | Bluetooth | BlueToolFixup, RealtekBluetoothFirmware |
 | Input | VoodooI2C, VoodooI2CELAN, VoodooI2CHID, VoodooPS2Controller |
 | Power | CPUFriend, CPUFriendDataProvider, NVMeFix, ECEnabler, CpuTscSync |
@@ -50,8 +50,8 @@ Only update the kexts you need, one group at a time:
 Notes:
 
 - Lilu must load before anything that depends on it.
-- `AirportRTW`, `IOSkywalkFamily` and `IO80211FamilyLegacy` are version-coupled. Update
-  them together or not at all.
+- `AirportRTW` is self-contained: one kext, RTW88 and RTW89 backends chosen by PCI ID.
+  It does not use `IOSkywalkFamily` or `IO80211FamilyLegacy`; leave those disabled.
 - `CPUFriendDataProvider` is generated for a specific CPU and SMBIOS. Do not replace it
   with someone else's file.
 - `USBMap.kext` is hardware-specific. Updating it means remapping your ports.
@@ -88,7 +88,7 @@ pmset -g log | tail -20               # sleep still behaving?
 ```
 
 Audio and WiFi are the two things most likely to break. Both are fixable by adjusting
-`layout-id` or updating the AirportRTW trio — no reinstall needed.
+`layout-id` or replacing `AirportRTW` with a matching release — no reinstall needed.
 
 ## If an update breaks the boot
 
