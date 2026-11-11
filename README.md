@@ -224,9 +224,10 @@ Where the current build stands, stated plainly:
   so run the layout verifier before any macOS upgrade.
 
 The fork, its build script, the offset tables and the setup/verify tools live in a
-separate repository: **[WhateverGreen-HDMIB →](https://github.com/miyatimusica/REPO-HDMIB)**
-*(link to be completed)*. Note that WhateverGreen is GPL-2.0 and the BSD-3 module is
-compiled into it, so the resulting binary is distributed under the GPL.
+separate repository:
+**[WhateverGreen-HDMIB →](https://github.com/miyatimusica/Wharevergreen-Icelake-mod)**.
+The module and WhateverGreen are both BSD-3-Clause, so the combined binary keeps those
+terms.
 
 ---
 
@@ -352,9 +353,9 @@ MIT — see [LICENSE](LICENSE). OpenCore, Lilu, VirtualSMC, AppleALC, WhateverGr
 rest belong to their respective authors; see [CHANGELOG.md](CHANGELOG.md#credits).
 
 Two bundled components carry their own licenses: `AirportRTW.kext` is **GPL-2.0**
-([souissiak1-maker/AirportRTW](https://github.com/souissiak1-maker/AirportRTW)), and the
-WhateverGreen base of `WhateverGreen-HDMIB.kext` is **GPL-2.0** as well. Redistributing
-this EFI keeps those binaries under their original terms.
+([souissiak1-maker/AirportRTW](https://github.com/souissiak1-maker/AirportRTW)), and
+`WhateverGreen-HDMIB.kext` is **BSD-3-Clause** (WhateverGreen plus the HDMIB module).
+Redistributing this EFI keeps those binaries under their original terms.
 
 > This EFI is published for study and reuse. Hackintoshing violates Apple's EULA.
 > No warranty; you own the consequences of flashing your firmware and erasing your disks.
