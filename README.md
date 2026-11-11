@@ -59,15 +59,15 @@ or only under specific conditions · ❌ not supported
 | 📶 WiFi | ✅ | `AirportRTW` 2.3.1 (souissiak1-maker fork), RTL8821CE |
 | 🔵 Bluetooth | ✅ | Onboard Realtek combo (`13d3:3529`), WiFi/BT coexistence enabled by a local `AirportRTW` patch. AirDrop still not working |
 | 🌐 Ethernet | ✅ | `RealtekRTL8111` 3.0.0 |
-| 🖱️ Trackpad (ELAN I2C) | ✅ | `VoodooI2C` 2.9.1 + `VoodooI2CELAN` |
+| 🖱️ Trackpad (ELAN I2C) | ✅ | `VoodooI2C` 2.9.1 + `VoodooI2CHID` (ELAN is HID-over-I2C) |
 | ⌨️ Keyboard + Fn keys | ✅ | `VoodooPS2Controller` 2.3.8 |
 | 🔋 Battery / AC | ✅ | `SMCBatteryManager` |
 | 😴 Sleep / wake | ✅ | Lid and power button |
 | 🔌 USB ports | ✅ | `USBMap.kext` for this exact port layout |
 | 💾 NVMe | ✅ | `NVMeFix` |
 | 📷 Webcam | ✅ | Native UVC |
-| 💳 SD card reader | ❌ | No usable driver |
-| 👆 Fingerprint reader | ❌ | No driver |
+| 💳 SD card reader | ⏳ | Enumerates as a USB card reader (`0bda:0129`, USB2.0-CRW). Not yet tested with a card — no kext needed, it is USB mass storage |
+| 👆 Fingerprint reader | ❌ | No driver exists for this sensor; not covered in any way |
 
 Other X415 variants (X415EA, X415EP, other CPUs) are **not** covered by this EFI.
 The ACPI and framebuffer data are specific to the i5-1035G1 / UHD G1.
@@ -141,13 +141,12 @@ EFI/
     ├── config.plist
     ├── ACPI/       11 SSDTs (PNLF, RHUB, USBX, SRAM, TERM, DMAC,
     │               ALS0, SBUS-MCHC, HPET, SPI5, MaLd0n.aml)
-    ├── Drivers/    OpenRuntime, OpenCanopy, HfsPlus,
-    │               AudioDxe, ResetNvramEntry
-    ├── Kexts/      29 kexts
+    ├── Drivers/    OpenRuntime, OpenCanopy, HfsPlus, ResetNvramEntry
+    ├── Kexts/      25 kexts
     └── Resources/  OpenCanopy theme assets
 ```
 
-280 files, ~52 MB.
+264 files, ~36 MB.
 
 ---
 
@@ -167,8 +166,8 @@ HDMIB module that lights up the HDMI port, `igfxfw=2` loads the GuC firmware,
 **iGPU** — `AAPL,ig-platform-id = 01005c8a`, `device-id = 5c8a0000`, plus framebuffer
 patches, `framebuffer-stolenmem`, `enable-dvmt-calc-fix` and `enable-cfl-backlight-fix`.
 
-**Audio** — `layout-id 66` on `PciRoot(0x0)/Pci(0x1F,0x3)`. `SimpleHDA.kext` is present
-but **disabled** in `config.plist`; audio is handled by `AppleALC` alone.
+**Audio** — `layout-id 66` on `PciRoot(0x0)/Pci(0x1F,0x3)`, handled by `AppleALC`
+alone.
 
 **Kernel quirks** — `AppleXcpmCfgLock`, `AppleXcpmExtraMsrs`, `DisableIoMapper`,
 `PanicNoKextDump`, `PowerTimeoutKernelPanic`.

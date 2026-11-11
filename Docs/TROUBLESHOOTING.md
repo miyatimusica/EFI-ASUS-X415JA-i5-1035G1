@@ -21,7 +21,7 @@ A photograph of the last lines beats guessing. Also check that the BIOS still ma
 | Black screen after the picker, no text | Graphics driver loaded and failed | Boot with `-igfxvesa` to reach the desktop, then fix the framebuffer |
 | Panic in `AppleIntel*Graphics` | Wrong platform/device ID or DVMT too low | Restore `01005c8a` / `5c8a0000`, raise DVMT to 128M |
 | Panic in `AppleACPIPlatform` | SSDT does not match the board | Disable SSDTs one by one, starting with `MaLd0n.aml` |
-| Panic in `VoodooI2C` | Trackpad conflict | Disable `VoodooI2CELAN` and `VoodooI2CHID`, boot, re-add one at a time |
+| Panic in `VoodooI2C` | Trackpad conflict | Disable `VoodooI2CHID`, boot, re-add it after `VoodooI2C` loads |
 | Panic in `AirportRTW` | Corrupt or mismatched kext | Re-copy `AirportRTW.kext` 2.3.1, keep `SecureBootModel = Disabled` |
 | Boots but no graphics acceleration | `WhateverGreen-HDMIB` not loading | Check `kextstat`, check the kext is enabled in `Kernel → Add` |
 
@@ -79,12 +79,12 @@ Confirm `layout-id 66` is set on `PciRoot(0x0)/Pci(0x1F,0x3)` and `alcverbs=1` i
 `boot-args`. If the device shows up but produces no sound, try other AppleALC layouts for
 this codec (3, 11, 13, 21, 66) one at a time with a reboot between.
 
-`SimpleHDA.kext` is present but disabled on purpose. Enabling it while `AppleALC` also
-handles the codec is a common cause of silence.
+Only `AppleALC` handles the codec here. Do not add a second HDA kext (for example
+`SimpleHDA`): two drivers on the same codec is a common cause of silence.
 
 ### Trackpad not working
 
-Check that `VoodooI2C`, `VoodooI2CELAN` and `VoodooI2CHID` are all loaded, and that the
+Check that `VoodooI2C` and `VoodooI2CHID` are both loaded, and that the
 I2C/GPIO hotpatches in `MaLd0n.aml` are enabled. `SSDT-SPI5.aml` also matters for this
 board's I2C path.
 

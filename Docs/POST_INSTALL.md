@@ -81,7 +81,7 @@ Never sign in with the SMBIOS that shipped in this repo.
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/xzhih/one-key-hidpi/master/hidpi.sh)"
 ```
 
-FileVault works with this EFI (OpenRuntime + AudioDxe are present), but enable it only
+FileVault works with this EFI (OpenRuntime is loaded), but enable it only
 after you have confirmed the machine boots reliably without the USB, and keep the recovery
 key somewhere other than the machine.
 

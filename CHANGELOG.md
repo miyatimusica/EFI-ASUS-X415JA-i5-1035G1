@@ -22,8 +22,7 @@ running macOS Sequoia 15.8.3.
 ### Bootloader
 
 - `OpenCore.efi` 1.0.8
-- Drivers: `OpenRuntime.efi`, `OpenCanopy.efi`, `HfsPlus.efi`, `AudioDxe.efi`,
-  `ResetNvramEntry.efi`
+- Drivers: `OpenRuntime.efi`, `OpenCanopy.efi`, `HfsPlus.efi`, `ResetNvramEntry.efi`
 - Boot picker: OpenCanopy (graphical), `PickerMode = External`
 - `SecureBootModel = Disabled`, `Vault = Optional`
 
@@ -35,7 +34,7 @@ running macOS Sequoia 15.8.3.
 `MaLd0n.aml` carries the DSDT hotpatches (RTC, HPET, USB, I2C/GPIO); the rest are
 targeted fixes for backlight, USB power, SMBus and the ambient-light stub.
 
-### Kexts (29)
+### Kexts (25)
 
 | Kext | Version | Role |
 |------|---------|------|
@@ -46,7 +45,6 @@ targeted fixes for backlight, USB power, SMBus and the ambient-light stub.
 | SMCLightSensor | 1.3.8 | Ambient light |
 | WhateverGreen-HDMIB | 1.7.2 | Fork of WhateverGreen with the Ice Lake HDMI module (`-igfxhdmib`) |
 | AppleALC | 1.9.8 | Audio |
-| SimpleHDA | 1.0.0 | Present, **disabled** in config |
 | AsusSMC | 1.4.1 | ASUS EC keys |
 | ECEnabler | 1.0.6 | Embedded controller reads |
 | CPUFriend | 1.3.0 | Power-management tuning |
@@ -56,14 +54,11 @@ targeted fixes for backlight, USB power, SMBus and the ambient-light stub.
 | RestrictEvents | 1.1.7 | Telemetry / CPU-name patches |
 | AMFIPass | 1.4.1 | AMFI bypass |
 | AirportRTW | 2.3.1 | RTL8821CE WiFi + Bluetooth coexistence (souissiak1-maker fork, GPL-2.0, **locally patched** — see below) |
-| IOSkywalkFamily | 1.0 | Present in `Kexts/`, **not injected** — leftover |
-| IO80211FamilyLegacy | 12.0 | Present in `Kexts/`, **not injected** — leftover |
 | BlueToolFixup | 2.7.2 | Bluetooth fixes |
 | RealtekBluetoothFirmware | 1.0.2 | Realtek BT firmware |
 | RealtekRTL8111 | 3.0.0 | Ethernet |
 | VoodooI2C | 2.9.1 | I2C bus |
-| VoodooI2CELAN | 1.0 | ELAN trackpad |
-| VoodooI2CHID | 1.0 | I2C HID |
+| VoodooI2CHID | 1.0 | ELAN trackpad (HID-over-I2C) |
 | VoodooPS2Controller | 2.3.8 | Keyboard |
 | BrightnessKeys | — | Fn brightness keys |
 | USBMap | 1.1 | Port map for this chassis |
@@ -93,14 +88,30 @@ coexistence for a single PCI ID; this build extends it to the RTL8821CE in this 
 (`10ec:c821`), which is what makes WiFi and Bluetooth usable at the same time. The change
 is local and not upstreamed — replacing the kext with an official build loses it.
 
+### Removed in this cleanup
+
+Four kexts were sitting in `Kexts/` without being injected, plus one unused UEFI driver:
+
+| Removed | Why |
+|---------|-----|
+| `IOSkywalkFamily.kext` | Not referenced by `Kernel → Add`; `AirportRTW` does not need it |
+| `IO80211FamilyLegacy.kext` | Same — leftover from an earlier WiFi setup (11 MB) |
+| `VoodooI2CELAN.kext` | Not injected; the ELAN trackpad runs through `VoodooI2CHID` |
+| `SimpleHDA.kext` | Was disabled in config; audio works with `AppleALC` alone (4.3 MB) |
+| `AudioDxe.efi` + `Resources/Audio` | Boot chime is not enabled (`AudioSupport` unset) |
+
+A disabled framebuffer patch with no comment was also dropped from `Kernel → Patch`.
+The EFI went from 52 MB to 36 MB with no behavioural change.
+
 ### Known limitations
 
 - HDMI audio: not working yet.
 - HDMI resolutions above 1360×768: pending testing, not confirmed broken.
 - AirDrop does not work yet; the rest of Bluetooth does (pairing, audio, file transfer,
   input devices) alongside WiFi.
-- SD card reader: no usable driver.
-- Fingerprint reader: no driver.
+- SD card reader: enumerates as a USB card reader (`0bda:0129`), but has not been tested
+  with a card inserted.
+- Fingerprint reader: no driver exists; not covered.
 - `USBMap.kext` matches this exact port layout only.
 - SMBIOS values are placeholders and must be regenerated before use.
 
@@ -113,7 +124,7 @@ is local and not upstreamed — replacing the kext with an official build loses 
   ECEnabler, AMFIPass
 - [Dortania](https://dortania.github.io/OpenCore-Install-Guide/) — install guide and
   troubleshooting reference
-- [VoodooI2C](https://github.com/VoodooI2C) — VoodooI2C, VoodooI2CELAN, VoodooI2CHID
+- [VoodooI2C](https://github.com/VoodooI2C) — VoodooI2C, VoodooI2CHID
 - [Acidanthera / RehabMan lineage](https://github.com/RehabMan) — VoodooPS2Controller
 - [souissiak1-maker / AirportRTW](https://github.com/souissiak1-maker/AirportRTW)
   (GPL-2.0) — Realtek RTW88/RTW89 driver, built on the

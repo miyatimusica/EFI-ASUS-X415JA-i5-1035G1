@@ -34,7 +34,7 @@ specific conditions · ❌ not supported
 | 📶 WiFi | ✅ | `AirportRTW` 2.3.1 (souissiak1-maker fork), RTL8821CE |
 | 🔵 Bluetooth | ✅ | Onboard Realtek combo (`13d3:3529`), needs the patched `AirportRTW` for coexistence with WiFi. AirDrop still not working |
 | 🌐 Ethernet | ✅ | `RealtekRTL8111` 3.0.0 |
-| 🖱️ Trackpad | ✅ | ELAN I2C, `VoodooI2C` 2.9.1 + `VoodooI2CELAN` |
+| 🖱️ Trackpad | ✅ | ELAN I2C, `VoodooI2C` 2.9.1 + `VoodooI2CHID` (ELAN is HID-over-I2C) |
 | ⌨️ Keyboard | ✅ | `VoodooPS2Controller` 2.3.8 |
 | 🔆 Fn brightness keys | ✅ | `BrightnessKeys` |
 | 🔋 Battery / AC status | ✅ | `SMCBatteryManager` |
@@ -42,8 +42,8 @@ specific conditions · ❌ not supported
 | 🔌 USB ports | ✅ | `USBMap.kext` for this chassis |
 | 💾 NVMe | ✅ | `NVMeFix` 1.1.4 |
 | 📷 Webcam | ✅ | Native UVC |
-| 💳 SD card reader | ❌ | No usable kext |
-| 👆 Fingerprint reader | ❌ | No driver |
+| 💳 SD card reader | ⏳ | USB card reader (`0bda:0129`, USB2.0-CRW); enumerates, not yet tested with a card |
+| 👆 Fingerprint reader | ❌ | No driver exists; not covered |
 | ⚡ Thunderbolt | ❌ | Not present on this model |
 
 ---
@@ -70,7 +70,7 @@ connector patch in `DeviceProperties` — see
 ## Audio
 
 `layout-id 66` (0x42) on `PciRoot(0x0)/Pci(0x1F,0x3)`, with `alcverbs=1` in boot args.
-`SimpleHDA.kext` ships in the EFI but is disabled — audio works through `AppleALC` alone.
+Audio is handled by `AppleALC` alone.
 
 If audio breaks after a macOS update, try other AppleALC layouts for this codec
 (3, 11, 13, 21, 66) one at a time, rebooting between changes.

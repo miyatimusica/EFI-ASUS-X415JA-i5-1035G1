@@ -43,7 +43,7 @@ Only update the kexts you need, one group at a time:
 | Audio | AppleALC |
 | WiFi | AirportRTW (single kext) |
 | Bluetooth | BlueToolFixup, RealtekBluetoothFirmware |
-| Input | VoodooI2C, VoodooI2CELAN, VoodooI2CHID, VoodooPS2Controller |
+| Input | VoodooI2C, VoodooI2CHID, VoodooPS2Controller |
 | Power | CPUFriend, CPUFriendDataProvider, NVMeFix, ECEnabler, CpuTscSync |
 | Other | RestrictEvents, AMFIPass, AsusSMC, BrightnessKeys, USBMap, HoRNDIS |
 
